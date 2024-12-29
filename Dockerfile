@@ -1,7 +1,5 @@
-# Dockerfile
-
-# Use Maven for the build stage
-FROM maven:3.9.0-openjdk-21-slim AS builder
+# Use Maven for the build stage with a compatible version of OpenJDK
+FROM maven:3.8.6-openjdk-11-slim AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -14,7 +12,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use OpenJDK for the runtime stage
-FROM openjdk:21-slim
+FROM openjdk:11-slim
 
 # Set the working directory
 WORKDIR /app
