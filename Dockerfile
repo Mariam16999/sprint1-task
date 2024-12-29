@@ -28,5 +28,9 @@ WORKDIR /app
 # Copy the built .jar file from the builder image
 COPY --from=builder /app/target/task1-git-1.0-SNAPSHOT.jar /app/sprint1-task.jar
 
+# Expose both ports (8081 and 8082) in the container
+EXPOSE 8082
+
 # Run the application
 CMD ["java", "-jar", "sprint1-task.jar"]
+
