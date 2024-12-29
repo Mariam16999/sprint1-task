@@ -53,14 +53,20 @@ pipeline {
             }
         }
 
-        stage('Clean Up') {
-            steps {
-                script {
-                    // Remove the Docker image after the process
-                    sh 'docker rmi $IMAGE_NAME:$IMAGE_TAG'
-                }
-            }
+stage('Clean Up') {
+    steps {
+        script {
+            // Remove running containers that are using the image
+            sh 'docker ps -q --filter "ancestor=$IMAGE_NAME:$IMAGE_TAG" | xargs -r docker stop | xargs -r docker rm'
+            
+            // Force remove the Docker image if it is still present
+            sh 'docker rmi -f $IMAGE_NAME:$IMAGE_TAG || true'
+            
+            // Prune unused Docker resources
+            sh 'docker system prune -f'
         }
+    }
+}
     }
 
     post {
