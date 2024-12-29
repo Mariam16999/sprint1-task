@@ -40,6 +40,8 @@ pipeline {
                 script {
                     // Run the Docker container, exposing port 8082 on the host and binding it to the container's port 8082
                     sh 'docker run -d -p 8082:8082 $IMAGE_NAME:$IMAGE_TAG'
+                    // Print the container logs to the console for debugging
+                    sh "docker logs ${containerId}"
                 }
             }
         }
