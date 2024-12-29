@@ -1,18 +1,23 @@
-# Use Maven for the build stage with a compatible version of OpenJDK
-FROM maven:3.8.6-openjdk-11-slim AS builder
+# Use OpenJDK 21 as the base image for the build stage
+FROM openjdk:21-slim AS builder
+
+# Install Maven
+RUN apt-get update && apt-get install -y \
+    maven \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the pom.xml and source code
+# Copy the pom.xml and the source code
 COPY pom.xml .
 COPY src ./src
 
 # Build the project using Maven
 RUN mvn clean package -DskipTests
 
-# Use OpenJDK for the runtime stage
-FROM openjdk:11-slim
+# Use OpenJDK 21 for the runtime stage
+FROM openjdk:21-slim
 
 # Set the working directory
 WORKDIR /app
