@@ -26,7 +26,7 @@ FROM openjdk:21-slim
 WORKDIR /app
 
 # Copy the built .jar file from the builder image
-COPY --from=builder /app/target/sprint1-task-1.0-SNAPSHOT.jar /app/sprint1-task.jar
+COPY --from=builder /app/target/task1-git-1.0-SNAPSHOT.jar /app/sprint1-task.jar
 
 # Run the application
 CMD ["java", "-jar", "sprint1-task.jar"]
