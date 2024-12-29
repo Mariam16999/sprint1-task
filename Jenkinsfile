@@ -39,9 +39,9 @@ pipeline {
             steps {
                 script {
                     // Run the Docker container, exposing port 8082 on the host and binding it to the container's port 8082
-                    sh 'docker run -d -p 8082:8082 $IMAGE_NAME:$IMAGE_TAG'
+                    def containerId = sh(script: 'docker run -d -p 8082:8082 $IMAGE_NAME:$IMAGE_TAG', returnStdout: true).trim()
                     // Print the container logs to the console for debugging
-                    sh "docker logs ${containerId}"
+                    sh "docker logs $containerId"
                 }
             }
         }
@@ -55,20 +55,20 @@ pipeline {
             }
         }
 
-stage('Clean Up') {
-    steps {
-        script {
-            // Remove running containers that are using the image
-            sh 'docker ps -q --filter "ancestor=$IMAGE_NAME:$IMAGE_TAG" | xargs -r docker stop | xargs -r docker rm'
-            
-            // Force remove the Docker image if it is still present
-            sh 'docker rmi -f $IMAGE_NAME:$IMAGE_TAG || true'
-            
-            // Prune unused Docker resources
-            sh 'docker system prune -f'
+        stage('Clean Up') {
+            steps {
+                script {
+                    // Remove running containers that are using the image
+                    sh 'docker ps -q --filter "ancestor=$IMAGE_NAME:$IMAGE_TAG" | xargs -r docker stop | xargs -r docker rm'
+                    
+                    // Force remove the Docker image if it is still present
+                    sh 'docker rmi -f $IMAGE_NAME:$IMAGE_TAG || true'
+                    
+                    // Prune unused Docker resources
+                    sh 'docker system prune -f'
+                }
+            }
         }
-    }
-}
     }
 
     post {
