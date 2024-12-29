@@ -16,6 +16,9 @@ COPY src ./src
 # Build the project using Maven
 RUN mvn clean package -DskipTests
 
+# List the contents of the /app/target directory to verify the JAR file path
+RUN ls -l /app/target
+
 # Use OpenJDK 21 for the runtime stage
 FROM openjdk:21-slim
 
